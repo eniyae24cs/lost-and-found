@@ -1,0 +1,97 @@
+<div class="container">
+
+  <h1>🔎 Lost & Found Management System</h1>
+
+  <p class="subtitle">
+    Find lost items and report found items easily.
+  </p>
+<div class="stats">
+
+  <div class="stat-card">
+    <h3>📦 Total Items</h3>
+    <p><%= @total_items %></p>
+  </div>
+
+  <div class="stat-card">
+    <h3>🔴 Lost</h3>
+    <p><%= @lost_items %></p>
+  </div>
+
+  <div class="stat-card">
+    <h3>🟢 Found</h3>
+    <p><%= @found_items %></p>
+  </div>
+
+  <div class="stat-card">
+    <h3>🔵 Claimed</h3>
+    <p><%= @claimed_items %></p>
+  </div>
+
+</div>
+  <div class="actions">
+    <%= link_to "➕ Report Lost / Found Item", new_item_path, class: "btn" %>
+  </div>
+
+  <%= form_with url: items_path, method: :get, local: true do |form| %>
+
+    <%= form.text_field :search,
+        value: params[:search],
+        placeholder: "Search by item, category or location..." %>
+
+    <%= form.select :status,
+        options_for_select(
+          [
+            ["All Items", ""],
+            ["Lost", "Lost"],
+            ["Found", "Found"],
+            ["Claimed", "Claimed"]
+          ],
+          params[:status]
+        ) %>
+
+    <%= form.submit "Search", class: "btn" %>
+
+  <% end %>
+  <% if @items.empty? %>
+  <div class="no-items">
+    <h2>😔 No items found</h2>
+    <p>Try another search or report a new lost/found item.</p>
+  </div>
+<% end %>
+
+  <div class="items">
+
+    <% @items.each do |item| %>
+
+      <div class="card">
+
+        <% if item.image.attached? %>
+          <%= image_tag item.image, class: "item-image" %>
+        <% end %>
+
+        <h2><%= item.title %></h2>
+
+        <p>
+          <strong>Status:</strong>
+          <%= item.status %>
+        </p>
+
+        <p>
+          <strong>Category:</strong>
+          <%= item.category %>
+        </p>
+
+        <p>
+          <strong>Location:</strong>
+          <%= item.location %>
+        </p>
+
+        <%= link_to "View Details", item_path(item), class: "btn" %>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+</div>
